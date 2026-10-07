@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building power plan: solar, battery backup and metering</title>
+  <meta name="description" content="Solar, battery backup and private metering plan for a G+4 + penthouse building in Hyderabad.">
+  <link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Building power plan <span>G+4 + penthouse, Hyderabad</span></div>
+      <nav class="nav" aria-label="Sections">
+        <a href="#building">Building</a>
+        <a href="#wiring">Wiring</a>
+        <a href="#home">Home wiring</a>
+        <a href="#flow">Energy flow</a>
+        <a href="#phases">Phases</a>
+        <a href="#bills">Bills</a>
+        <a href="#contingency">Contingency</a>
+        <a href="#options">Options</a>
+        <a href="#engineering">Engineering</a>
+        <a href="#electrician">Electrician</a>
+        <a href="#contractor">Contractor</a>
+      </nav>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    </div>
+  </header>
+
+  <div class="scenario-bar no-print" id="scenarioBar">
+    <div class="scenario-bar-inner">
+      <span class="label">Viewing</span>
+      <div class="seg" id="meterModeSeg"></div>
+      <span class="scenario-note" id="scenarioNote"></span>
+    </div>
+  </div>
+
+  <main>
+    <div class="wrap">
+      <section class="intro" aria-labelledby="title">
+        <div>
+          <h1 id="title">Solar, battery backup and private metering for six floors</h1>
+          <p class="lede">Two net meters from TGSPDCL, the power company, feed the building. Meter 2 carries the PuREPower hybrid inverter, 12 kW of solar panels and the heavier floors; Meter 1 is a net meter too, it just has no generation behind it yet. Every floor is billed by its own private meters, and lights, fans and the lift never blink in a power cut.</p>
+          <div class="facts" id="facts"></div>
+        </div>
+        <div class="decisions">
+          <h3>Your decisions in this plan</h3>
+          <dl>
+            <dt>Meter split</dt><dd>Layout C: Meter 2 = inverter + Floors 2, 3, 4. Floor 1 and Floor 2 each have a transfer switch, so the split can move to Layout B (or a third position) without rewiring if TGSPDCL counts every appliance, or if floors sit empty</dd>
+            <dt>Floor wiring</dt><dd>Two boards per home: grid board + backup board</dd>
+            <dt>Appliances</dt><dd>Air conditioners, geysers, kitchen, fridge and washing machine on the grid board, one circuit each; they go off in a power cut</dd>
+            <dt>Floor metering</dt><dd>Two private meters per floor, grid and backup (one dual meter also compared)</dd>
+            <dt>Solar</dt><dd>12 kW, 3 strings of 7 panels</dd>
+            <dt>Battery</dt><dd>Backup first: kept at 85-100 %</dd>
+            <dt>Backup limit</dt><dd>1.5 kW per home, Penthouse 1.0 kW</dd>
+            <dt>Phases</dt><dd>3-phase backup in every home</dd>
+            <dt>Billing</dt><dd>Two bills pooled and split by meter readings; common area split by 5 homes</dd>
+            <dt>Group net metering</dt><dd>Not used</dd>
+          </dl>
+        </div>
+      </section>
+    </div>
+
+    <!-- Building -->
+    <section class="section" id="building" aria-labelledby="h-building">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-building">The building</h2>
+          <p>Click a floor to see its meters, boards and loads. Switch layers to see the vertical cable paths and earth pits.</p>
+        </div>
+        <div class="controls">
+          <div class="control"><span class="label">Layers</span>
+            <div class="chips" id="layerChips"></div>
+          </div>
+        </div>
+        <div class="split">
+          <div class="panel panel-pad"><svg id="buildingSvg" class="diagram" viewBox="0 0 560 660" role="img" aria-label="Building elevation with solar, floors, risers and electrical room"></svg></div>
+          <div class="panel panel-pad" id="floorInfo" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Wiring -->
+    <section class="section" id="wiring" aria-labelledby="h-wiring">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-wiring">Connection diagram</h2>
+          <p>Single-line view from the TGSPDCL meters to every floor. Change the meter layout or switch to power-cut view to see what stays live.</p>
+        </div>
+        <div class="controls">
+          <div class="control" id="sldArchControl"><span class="label">What Meter 2 feeds</span><div class="seg" id="sldArch"></div></div>
+          <div class="control"><span class="label">View</span><div class="seg" id="sldView"></div></div>
+          <button class="btn ghost no-print" type="button" id="printSld">Print diagram</button>
+        </div>
+        <div class="panel panel-pad">
+          <svg id="sldSvg" class="diagram" viewBox="0 0 1330 640" role="img" aria-label="Single-line diagram"></svg>
+          <div class="legend">
+            <span><i style="border-color:var(--m1)"></i>Meter 1 grid</span>
+            <span><i style="border-color:var(--m2)"></i>Meter 2 grid</span>
+            <span><i style="border-color:var(--backup)"></i>Backup bus (inverter output)</span>
+            <span><i style="border-color:var(--solar)"></i>Solar panel cable</span>
+            <span><i class="dash" style="border-color:var(--m2)"></i>Bypass line (Day 1, servicing)</span>
+            <span><i class="dash" style="border-color:var(--dead)"></i>Dead in a power cut</span>
+            <span><i style="border-color:var(--warn)"></i>Floor emergency isolator (grid + backup)</span>
+            <span><i class="dash" style="border-color:var(--line-strong)"></i>Bus-tie switch (open = two meters, closed = one)</span>
+          </div>
+        </div>
+        <p class="small muted" style="margin-top:12px" id="sldNote"></p>
+      </div>
+    </section>
+
+    <!-- Home wiring -->
+    <section class="section" id="home" aria-labelledby="h-home">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-home">Inside a home: what is on each line</h2>
+          <p>Every heavy appliance has its own circuit on the grid board. That line has no backup, so these go off in a power cut. The backup board carries fans, lights, TV, router and the work socket from the inverter. Pick a home and switch to the power-cut view.</p>
+        </div>
+        <div class="controls">
+          <div class="control"><span class="label">Home</span><div class="seg" id="homePick"></div></div>
+          <div class="control"><span class="label">View</span><div class="seg" id="homeView"></div></div>
+        </div>
+        <div class="panel panel-pad">
+          <svg id="homeSvg" class="diagram" viewBox="0 0 1200 560" role="img" aria-label="Circuits and appliances inside one home"></svg>
+        </div>
+        <div class="statline" id="homeStats"></div>
+        <h3 style="margin:32px 0 6px">Load check: is the meter split still allowed with all these appliances?</h3>
+        <p class="small muted" style="margin-bottom:10px">TGSPDCL gives a low-tension meter only up to about 56 kW (to be confirmed). Above that it needs an 11 kV supply and a transformer. "Every appliance counted" adds up the ratings of all appliances as if all ran at once. "Expected peak" is what the meter will really see.</p>
+        <div class="table-wrap compact" id="loadCheck"></div>
+        <p class="note" style="margin-top:14px" id="loadNote"></p>
+      </div>
+    </section>
+
+    <!-- Energy flow -->
+    <section class="section" id="flow" aria-labelledby="h-flow">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-flow">Energy flow over a day</h2>
+          <p>A 24-hour simulation in 15-minute steps. Pick a season, add a power cut or empty floors, then play the day or drag the time.</p>
+        </div>
+        <div class="controls">
+          <div class="control"><span class="label">Season</span><div class="seg" id="simSeason"></div></div>
+          <div class="control"><span class="label">Power cut</span><div class="seg" id="simOutage"></div></div>
+          <div class="control"><span class="label">Battery mode</span><div class="seg" id="simMode"></div></div>
+          <div class="control"><span class="label">Solar</span><div class="seg" id="simPv"></div></div>
+          <div class="control"><span class="label">Homes occupied</span><div class="chips" id="simOcc"></div></div>
+          <div class="control"><span class="label">Extras</span><div class="chips" id="simExtras"></div></div>
+        </div>
+        <div class="split">
+          <div class="panel panel-pad">
+            <svg id="flowSvg" class="diagram" viewBox="0 0 760 380" role="img" aria-label="Animated power flow at the selected time"></svg>
+            <div class="controls no-print" style="margin:14px 0 0">
+              <button class="btn" type="button" id="playBtn">Play day</button>
+              <div class="control" style="flex:1;min-width:220px"><span class="label" id="timeLabel">Time</span>
+                <input type="range" id="timeSlider" min="0" max="95" step="1" value="48" aria-label="Time of day">
+              </div>
+            </div>
+            <div class="readout" id="flowReadout"></div>
+          </div>
+          <div>
+            <div class="panel panel-pad">
+              <h3>24-hour profile</h3>
+              <svg id="dayChart" class="diagram" viewBox="0 0 560 300" role="img" aria-label="Power over 24 hours"></svg>
+              <div class="legend" id="dayLegend"></div>
+            </div>
+            <div class="panel panel-pad" style="margin-top:16px">
+              <h3>Day totals</h3>
+              <div class="statline" id="dayTotals"></div>
+              <p class="small muted" id="dayNote"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Phases -->
+    <section class="section" id="phases" aria-labelledby="h-phases">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-phases">Phase balance on the backup side</h2>
+          <p>The PuREPower Home 20.0 is rated 20 kVA in total (confirmed by the maker); split evenly that is about 6.7 kW per phase (still to be confirmed). Compare one phase per home with 3-phase backup in every home.</p>
+        </div>
+        <div class="controls">
+          <div class="control"><span class="label">Load on each home</span><div class="seg" id="phLoad"></div></div>
+          <div class="control"><span class="label">Homes occupied</span><div class="chips" id="phOcc"></div></div>
+          <div class="control"><span class="label">Lift</span><div class="seg" id="phLift"></div></div>
+          <div class="control"><span class="label">Pump on backup</span><div class="seg" id="phPump"></div></div>
+        </div>
+        <div class="split-even" id="phaseCards"></div>
+        <p class="note" style="margin-top:18px" id="phaseNote"></p>
+      </div>
+    </section>
+
+    <!-- Bills -->
+    <section class="section" id="bills" aria-labelledby="h-bills">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-bills">Bills, cost and payback</h2>
+          <p>Twelve months on the TGSPDCL 2026-27 home tariff. Change what Meter 2 feeds, the solar size, the billing method and the two scenarios you asked for (subsidy and floor meters).</p>
+        </div>
+        <div class="controls">
+          <div class="control" id="bArchControl"><span class="label">What Meter 2 feeds</span><div class="seg" id="bArch"></div></div>
+          <div class="control"><span class="label">Solar</span><div class="seg" id="bPv"></div></div>
+          <div class="control"><span class="label">Billing</span><div class="seg" id="bBilling"></div></div>
+          <div class="control" id="bFeeWrap"><span class="label" id="bFeeLabel">Fee per home, ₹/month</span><input type="number" id="bFee" min="0" step="50" value="800"></div>
+          <div class="control"><span class="label">Panels and subsidy</span><div class="seg" id="bSubsidy"></div></div>
+          <div class="control"><span class="label">Floor meters</span><div class="seg" id="bMetering"></div></div>
+          <div class="control"><span class="label">Backup phases</span><div class="seg" id="bPhase"></div></div>
+          <div class="control"><span class="label">Homes occupied</span><div class="chips" id="bOcc"></div></div>
+          <div class="control"><span class="label">Extras</span><div class="chips" id="bExtras"></div></div>
+        </div>
+        <div class="statline" id="billStats"></div>
+        <div class="split-even" style="margin-top:18px">
+          <div class="panel panel-pad">
+            <h3 id="billChartHeading">Both TGSPDCL bills, month by month</h3>
+            <svg id="billChart" class="diagram" viewBox="0 0 640 300" role="img" aria-label="Monthly bills with and without solar"></svg>
+            <div class="legend" id="billLegend">
+              <span><i style="border-color:var(--m1)"></i>Meter 1 bill</span>
+              <span><i style="border-color:var(--m2)"></i>Meter 2 bill (net metered)</span>
+              <span><i class="dash" style="border-color:var(--muted)"></i>Both bills without solar</span>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-bottom:10px">What each floor pays (monthly average)</h3>
+            <div class="table-wrap" id="floorTable"></div>
+            <p class="small muted" style="margin-top:10px">Ground (common) units are billed at the same rate and shared equally by the five homes. A vacant home pays nothing; its use and its common share fall on the owner.</p>
+          </div>
+        </div>
+        <div class="panel panel-pad" style="margin-top:16px">
+          <h3>Why the meter split matters: the tariff slab resets every month</h3>
+          <p class="small muted" style="margin-bottom:10px">TGSPDCL's home tariff is progressive and each connection's slab starts again from zero every month, so the average rate climbs fast as a connection's monthly units grow - whether or not solar sits behind it. The dot shows where Meter 1 sits today at the chosen layout; keeping it left of the 800-unit line (dashed) avoids the higher fixed charge too.</p>
+          <svg id="rateCurve" class="diagram" viewBox="0 0 640 230" role="img" aria-label="Average rate per unit against monthly units on one connection"></svg>
+        </div>
+        <h3 style="margin:28px 0 10px">System cost</h3>
+        <div class="table-wrap" id="capexTable"></div>
+      </div>
+    </section>
+
+    <!-- Contingency -->
+    <section class="section" id="contingency" aria-labelledby="h-cont">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-cont">Contingency: if TGSPDCL grants only one meter</h2>
+          <p>Worth planning for. If only one connection is sanctioned for the plot, the inverter and every floor's heavy loads end up behind the same meter: there is no second connection left to keep a clean, solar-backed slab. The wiring, backup design and billing method stay the same; only the meter split disappears. Flip “Viewing” at the top of the page to see this reflected in every diagram, flow simulation and calculation on this site.</p>
+        </div>
+        <div class="statline" id="contStats"></div>
+        <p class="note warn" id="contNote" style="margin-top:14px"></p>
+      </div>
+    </section>
+
+    <!-- Options -->
+    <section class="section" id="options" aria-labelledby="h-options">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-options">All combinations</h2>
+          <p>Every meter split, solar size, panel and subsidy choice and floor-meter option, with all homes occupied and the backup phases chosen above. Click a column to sort. Your current pick is highlighted.</p>
+        </div>
+        <div class="table-wrap compact" id="comboTable"></div>
+        <p class="small muted" style="margin-top:10px" id="comboNote"></p>
+        <div class="no-print" style="margin-top:12px"><button class="btn ghost" type="button" id="comboMore">Show all 54</button></div>
+        <h3 style="margin:28px 0 10px">Room to grow</h3>
+        <div class="table-wrap" id="futureTable"></div>
+      </div>
+    </section>
+
+    <!-- Engineering drawings -->
+    <section class="section" id="engineering" aria-labelledby="h-eng">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-eng">Engineering drawings: protection, load balance and parts</h2>
+          <p>For the electrician and panel fabricator: every board’s breaker/isolator schedule in one place, the building’s phase balance on the grid side, and suggested real switchgear for Hyderabad sourcing. Reads alongside the single-line diagram in Wiring.</p>
+          <div class="no-print"><button class="btn" type="button" id="printEng">Print engineering sheet</button></div>
+        </div>
+        <h3 style="margin-bottom:10px">Panel and protection schedule</h3>
+        <div class="sheet-group" id="engBoards"></div>
+        <h3 style="margin:28px 0 10px">Load balance: connected kW by phase (grid side, every floor)</h3>
+        <div class="split-even">
+          <div class="panel panel-pad" id="engPhaseGrid"></div>
+          <div class="panel panel-pad">
+            <p class="small muted">Each floor’s grid circuits are wired to the same labelled phases (R/Y/B) as Floor 1, then the whole floor is rotated one phase at a time (see the phase-rotation table in “For the electrician”) so that when every home runs its air conditioners together, no single phase carries the whole building’s load.</p>
+          </div>
+        </div>
+        <h3 style="margin:28px 0 10px">Suggested parts (Hyderabad / India sourcing - verify before ordering)</h3>
+        <p class="small muted" style="margin-bottom:10px">Representative well-known product families and indicative street prices, not quotes. Confirm exact model, stock and price with a local supplier or electrical contractor before ordering.</p>
+        <div class="sheet-group" id="engParts"></div>
+      </div>
+    </section>
+
+    <!-- Electrician -->
+    <section class="section" id="electrician" aria-labelledby="h-elec">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-elec">For the electrician</h2>
+          <p>Board schedules, cables, earthing and the tests to run before handover. Recommended setup: Meter 2 feeds the inverter and Floors 2-4, 3-phase backup in every home, two private meters per floor.</p>
+          <div class="no-print"><button class="btn" type="button" id="printElec">Print electrician sheet</button></div>
+        </div>
+        <div class="sheet-group" id="elecSheet"></div>
+      </div>
+    </section>
+
+    <!-- Contractor -->
+    <section class="section" id="contractor" aria-labelledby="h-con">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="h-con">For the contractor</h2>
+          <p>Who does what, the order of work, the bill of materials, lift protection and the questions that still need written answers.</p>
+          <div class="no-print"><button class="btn" type="button" id="printCon">Print contractor sheet</button></div>
+        </div>
+        <div class="sheet-group" id="conSheet"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Estimates for planning, not quotes. Tariff: TGSPDCL home tariff for 2026-27. Net metering: Telangana electricity regulator, Regulation 1 of 2025. Solar yield about 1,400 units per kW of panels per year. Items under "Still to confirm in writing" need written answers from PuREnergy, TGSPDCL or the lift vendor. Full written plan: solar_backup_final_plan.md.</p>
+    </div>
+  </footer>
+
+  <script src="js/model.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
