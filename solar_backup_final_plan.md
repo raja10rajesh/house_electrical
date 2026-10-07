@@ -1,7 +1,9 @@
 # Solar + Backup Power - Final Plan
 
-G+4 + penthouse, Hyderabad. 6 Oct 2026. Built from your decisions in
-[solar_power_plan_decision_guide.md](solar_power_plan_decision_guide.md).
+G+4 + penthouse, Hyderabad. 7 Oct 2026. Built from your decisions in
+[solar_power_plan_decision_guide.md](solar_power_plan_decision_guide.md), then tightened
+after the design review: inverter ceiling 17.5 kW, charger before the inverter, pumps on
+Meter 2, 14 kWp.
 
 - **Interactive version:** open [index.html](index.html) in any browser (works offline).
   It has the building layout, wiring diagram, a 24-hour energy-flow simulator, phase-balance and
@@ -39,18 +41,37 @@ Full list: section 0 of the decision guide. New short forms in this plan:
 | Household appliances | Added once the appliance list was worked out | Air conditioners, geysers, kitchen, fridge, washing machine on each home's grid board, one circuit each; off in a power cut (2.9) |
 | Floor wiring | W1 two boards per floor | Grid DB + UPS DB on every floor; no blink |
 | Floor metering | Bill grid and solar/backup units; dual-source meter only if it keeps the rails separate, else 2 meters | Both scenarios kept: **MA** (one dual-channel meter) and **MB** (two meters, recommended) |
-| Solar size | S3, 12 kWp | 12 kWp, 3 strings of 7 panels |
-| Battery | B1 backup-first | Battery stays 85-100 %; no daily cycling |
+| Solar size | S3, raised to 14 kWp for the May margin | 14 kWp, 3 strings of 8 half-cut panels. Monthly net metering is the rule (TGERC rooftop regulation, 15 Nov 2025), not an assumption |
+| Battery | B1 backup-first | No daily cycling. Summer float near 90 %, not held at 100 % in a hot room |
 | Billing | Split the two actual TGSPDCL bills by readings; common split equally by 5 homes; postpaid RS485 | Pooled rate per unit; Ground (common) cost / 5; vacant home's share falls on the owner. Two alternatives shown in 2.6 |
 | Inverter location | Ground-floor electrical room | Yes |
-| Backup limit per home | 1.5 kW | 1.5 kW (Penthouse 1.0 kW); checked against inverter limits in section 5 |
+| Backup limit per home | 1.5 kW | 1.5 kW (Penthouse 1.0 kW). Backup bus design ceiling 17.5 kW, not the 20 kVA nameplate |
 | BLDC fans | Yes | Yes (about 30 % less backup load) |
 | Pump on backup | No, but "if the inverter allows" | Borewell pump: never. Sump-to-overhead-tank transfer pump: default no; an interlocked option is costed (2.7) |
 | Lift on backup | Yes | Yes, with the protection list in section 11 |
 | PMSG subsidy | Try, and show both scenarios | Three cases in 2.4 |
-| Spare for later | EV way on SMP | Included; sizing in section 8 |
+| Car charger | After Meter 2, before the inverter | Solar main panel circuit 7. Units offset by monthly net metering. Not on the backup bus |
 | Longest power cut | "Note it in the final plan" | Section 2.5 |
 | Extra asks | BoM; lift reverse-current protection | Sections 10.3 and 11 |
+
+---
+
+## 1.1 Rules locked after the review
+
+These override any older line in this file if the two disagree. The website uses the same rules.
+
+| Rule | What it means |
+|---|---|
+| Inverter ceiling | Backup bus planned to **17.5 kW**, not 20 kVA. Worst case with every home at its limit and the lift running is 14.8 kW. Slack is 2.7 kW. Grid recharge is capped at 2.5 kW so a restart after a cut cannot stack on a full bus. |
+| Phases | 3-phase backup in every home. Work-socket phase rotates with the floor. 3 A breaker per phase (2 A in the penthouse), 3 A sockets only, not universal 6/16 A sockets. All 32 empty/occupied combinations stay inside 17.5 kW. The busiest case is everyone home, not a random vacant floor. |
+| Charger | Solar main panel circuit 7, after Meter 2, before the inverter. Monthly net metering offsets its units. It is not on the backup bus. A 240-unit charging month in May-July crosses 800 units; keep those months under about 170 units. |
+| May balance | 14 kWp and the common pumps on Meter 2 (grid side, not through the inverter). Worst month is then 660 units on Meter 1 (May) and 624 on Meter 2 (June). Both are more than 100 units under the 800-unit fixed-charge cliff. At 12 kWp the two meters sat at 750 and 744. |
+| Pump switch | 4-pole 20 A, I-0-II. Position II (Meter 2) is the default. Position I only together with the Floor 2 switch, if TGSPDCL counts every appliance. |
+| Floor cut-off | Two 4-pole isolators per floor, one padlock hasp. A single 4-pole switch cannot open both feeders. |
+| Bus-tie | 4-pole 160 A breaker, normally open, trapped-key interlock. Not a changeover. 70 mm2 tie, sized for the one-meter expected peak (about 95 A), not for every appliance at once. Close only after TGSPDCL removes the unused meter, phase and neutral. |
+| Net metering | The rule, not an assumption. TGERC rooftop regulation in force 15 Nov 2025: import and export net inside the month. Only a month-end surplus is paid, at the lowest discovered solar tariff. ₹2.75 in this plan is the planning figure for that tariff. |
+
+Both bills at this design point: about ₹64,300 a year (Meter 1 ₹36,100, Meter 2 ₹28,200). Surplus about 646 units a year. No month over 800 units. Expected peak about 14 kW and 47 kW. Every appliance counted is about 29 kW and 72 kW, so Layout C still needs the Floor 2 switch if TGSPDCL adds nameplates. Move the pump switch to Meter 1 at the same time, or Meter 2's connected load in Layout B sits on the 56 kW line.
 
 ---
 
@@ -242,6 +263,8 @@ Pooled rate = (Meter 1 bill + Meter 2 bill) / (sum of all private meter readings
 
 - With pure pooled billing the solar pays the residents: each home saves about ₹3,200/month,
   and your ₹12-16 lakh is not recovered.
+- Do not bill residents above the real pooled rate and call it a unit sale. A recovery fee inside
+  the rent is the safer of the options already in this table. Confirm that with your adviser.
 - Pooled + a fixed fee is simple and transparent: residents still pay half of what they would
   without solar, and you recover part of the cost.
 - A vacant home's own units and its common share are not collected, so they fall on you.
@@ -341,10 +364,7 @@ many TGSPDCL connections feed the building.
 
 **What changes:**
 
-- **No meter split to choose.** Layout A/B/C and both floor-transfer switches become pointless -
-  everything is on the one meter anyway. Drop TS1 and TS2 and the second incomer; GMP and SMP
-  merge into one Main Panel. Saves roughly ₹80,000-1,60,000 of switchgear, partly offset by a
-  larger single incomer and SPD.
+- **No meter split to choose.** Layout A/B/C becomes pointless. Do not delete the panels or the floor switches. Close the bus-tie breaker after TGSPDCL removes the unused meter, phase and neutral, using the trapped-key interlock. The 70 mm2 tie carries the expected peak, not every appliance at once. If the sanction is on connected load, this is an 11 kV problem, not a cable problem.
 - **Sanctioned load is the sum of everything.** Expected peak comes to about **61 kW** (41 kW
   across all floors + the inverter's 20 kVA) - already 5 kW over the 56 kW LT limit this plan
   has assumed. On a connected-load basis it's about **102 kW**, nearly double the limit. **This
@@ -426,7 +446,7 @@ flowchart TB
     GMP -.->|position I, Layout B| TS2
     SMP -->|position II, Layout C| TS2
     TS2 --> GM
-    SMP -.->|spare way| EV["EV charger (future)"]:::g2
+    SMP -->|after meter, before inverter| EV["EV charger"]:::g2
     EMDB --> BM
     GM --> GDB["Grid DB in each home, one circuit per appliance<br/>3 ACs, 2 geysers, induction, microwave,<br/>kitchen sockets, fridge, washing machine, iron<br/>Ground: pumps"]:::g1
     BM --> UDB["UPS DB on each floor<br/>fans, lights, TV, work socket<br/>Ground: lift, common lights, watchman"]:::bk
@@ -502,7 +522,9 @@ flowchart LR
 Units (kWh) per day. Meter 2 runs backwards at noon and forwards at night. Under monthly net
 metering only the month's total matters, which is why the battery doesn't need to cycle.
 
-### 4.3 The year (Layout C, 12 kWp)
+### 4.3 The year
+
+The plan's year is Layout C, 14 kWp, pumps on Meter 2. Worst month 660 units (Meter 1, May) and 624 (Meter 2, June). Both bills about Rs 64,300. Surplus about 646 units. The month-by-month sheet is on the website; it uses the same model. The table below is the earlier 12 kWp study, kept so the cliff (750 and 744 in May) is visible. Do not build to that table.
 
 | Month | Meter 1 | Meter 2 use | Solar | Meter 2 net | Bill 1 | Bill 2 | Bill 2 without solar | Pooled rate |
 |---|---|---|---|---|---|---|---|---|
@@ -531,8 +553,7 @@ fixed charge is based on the confirmed 44 kW sanctioned load.
 ## 5. Phase balance (R, Y, B) on the backup side
 
 Worst case: every home at its limit (1.5 kW, Penthouse 1.0 kW), common lights on, lift running.
-The PuREPower's **total** is now confirmed at 20 kVA; split evenly over 3 phases that is about
-6.7 kW per phase, but the per-phase split itself is still **VERIFY** with PuREnergy.
+The nameplate is 20 kVA. This plan stops the backup bus at **17.5 kW** (about 5.8 kW per phase). The even split of the nameplate is still **VERIFY** with PuREnergy. Do not plan up to 6.7 kW per phase.
 
 | | PB1: one phase per home | **PB2: 3-phase per home (recommended)** |
 |---|---|---|
@@ -626,7 +647,7 @@ Other cases (Layout C, 12 kWp):
 
 | Add later | What to leave now | Effect |
 |---|---|---|
-| EV charger (daytime) | Spare 32 A 4-pole way on SMP, 6 mm2 cable to parking | 240 units/month; adding 2 kWp (to 14 kWp) covers it |
+| EV charger (daytime) | Solar main panel circuit 7, after Meter 2, before the inverter. 32 A + Type B earth-leakage, 6 mm2 to parking | Units offset by monthly net metering. Not on the inverter. Keep May-July under about 170 units or the 800-unit cliff returns |
 | More panels | Roof layout for 3 x 8 panels | 14 kWp is the limit with one string per tracker; beyond that needs a 2nd inverter |
 | Solar on Meter 1 | Space + conduit for a 2nd inverter - Meter 1 is already a net meter, so only the generation side is missing | Only if roof space remains |
 | Floor-transfer switches | Floor 1 and Floor 2 switches fitted as standard (2.1); spare 4-pole way on the GMP for a third (Penthouse) | Rebalance when floors are empty or TGSPDCL's counting rule calls for it (2.1) |
@@ -641,37 +662,42 @@ Other cases (Layout C, 12 kWp):
 
 ### 9.1 Board schedules
 
-**Grid Main Panel (GMP)**, from Meter 1:
+**Grid Main Panel (GMP)**, from Meter 1. Incomer 4-pole MCCB 160 A, adjustable, set about 63 A
+(about 80 A if Floor 2 moves here). Surge protector Type 1+2 with the maker's backup breaker.
+Key A of the bus-tie interlock is trapped in this breaker while it is ON.
 
 | Way | Device | Feeds |
 |---|---|---|
-| Incomer | 4-pole MCCB 100 A, adjustable, set about 63 A (about 80 A if Floor 2 moves here) | Meter 1 |
-| SPD | Type 1+2, 4-pole | |
 | G1 | 4-pole MCB 40 A C | Floor 1 transfer switch, position I (default) |
 | G2 | 4-pole MCB 32 A C | Penthouse grid meter |
-| G3 | 4-pole MCB 20 A C | Ground pumps grid meter |
+| G3 | 4-pole MCB 20 A C | Pump transfer switch, position I (only with Layout B) |
 | G4 | 4-pole MCB 40 A C | Floor 2 transfer switch, position I (Layout B) |
-| G5 | Spare 4-pole 40 A | Future (third transfer switch, Penthouse) |
+| G5 | Spare 4-pole 40 A | Future |
+| G6 | 4-pole MCCB 160 A | Bus-tie breaker, normally open |
 
-**Solar Main Panel (SMP)**, from Meter 2:
+**Solar Main Panel (SMP)**, from Meter 2. Incomer 4-pole MCCB 160 A, adjustable, set about 80 A.
+Export current transformer on this incomer, not only on the inverter output. Surge protector
+Type 1+2 with its backup breaker. Key B of the bus-tie interlock is trapped while this breaker is ON.
 
 | Way | Device | Feeds |
 |---|---|---|
-| Incomer | 4-pole MCCB 100 A, set about 80 A | Meter 2 |
-| SPD | Type 1+2, 4-pole | |
-| S1 | 4-pole isolator 40 A, lockable, visible break, outside at 2.44 m | PuREPower AC input |
-| S2 | 4-pole MCB 40 A C | Floor 2 transfer switch, position II (Layout C) |
+| S1 | 4-pole isolator 40 A, lockable, visible break, outside at 2.44 m | PuREPower AC input. Only path into the inverter |
+| S2 | 4-pole MCB 40 A C | Floor 2 transfer switch, position II (Layout C, default) |
 | S3, S4 | 4-pole MCB 40 A C each | Floor 3, 4 grid meters |
 | S5 | 4-pole MCB 40 A C | Bypass switch position II |
-| S6 | Spare 4-pole 32 A | EV charger (Type A/B RCBO when used) |
-| S7 | 4-pole MCB 40 A C | Floor 1 transfer switch, position II (if moved) |
+| S6 | 4-pole MCB 40 A C | Floor 1 transfer switch, position II (if moved) |
+| S7 | 4-pole 32 A + Type B 30 mA earth-leakage | Car charger. After Meter 2, before the inverter |
+| S8 | 4-pole MCB 20 A C | Pump transfer switch, position II (default) |
 
-**Bypass switch:** 4-pole 63 A, I-0-II, break-before-make, padlock. I = PuREPower output,
-II = SMP bypass leg.
+**Bypass switch:** 4-pole 63 A, I-0-II, break-before-make, padlocked on position I after
+commissioning. Lamp on the door is ON only in position II. I = PuREPower output, II = SMP bypass leg.
 
 **Floor 1 transfer switch:** 4-pole 40 A, I-0-II, break-before-make, padlock, before the Floor 1
-grid meter. I = GMP G1 (Meter 1, default), II = SMP S7 (Meter 2). Change position only with
-TGSPDCL approval.
+grid meter. I = GMP G1 (Meter 1, default), II = SMP S6 (Meter 2). Not S7. S7 is the charger.
+Change position only with TGSPDCL approval.
+
+**Pump transfer switch:** 4-pole 20 A, I-0-II, before the Ground grid meter. I = GMP G3,
+II = SMP S8 (default). Never through the inverter.
 
 **Floor 2 transfer switch:** 4-pole 40 A, I-0-II, break-before-make, padlock, before the Floor 2
 grid meter. I = GMP G4 (Meter 1), II = SMP S2 (Meter 2). Change position only with TGSPDCL
@@ -687,6 +713,15 @@ approval.
 | E3-E6 | 4-pole MCB 10 A C each | Floors 1-4 backup meters (1.5 kW limit) |
 | E7 | 4-pole MCB 10 A C | Penthouse backup meter (1.0 kW limit) |
 | K1 | 4-pole contactor 25 A, PuREPower dry contact | Sheds exterior + half parking lights below 30 % |
+| K2 | 4-pole contactor 25 A, current relay | Drops the lift before the inverter current limit |
+| K3 | 4-pole contactor 16 A | One geyser only, and only while the grid is dead and solar has spare. Not a standing feed |
+
+**Floor cut-off (each floor, in the riser cupboard):** two 4-pole isolators, 40 A on the grid
+riser and 20 A on the backup riser, red handles, one padlock hasp through both. The floor is
+dead only when both are OFF. Do not use one 4-pole switch for both feeders.
+
+**Bus-tie:** 4-pole 160 A breaker, padlocked open, trapped-key interlock as in section 1.1.
+Cable 4-core 70 mm2 copper, full-size neutral. Not 25 mm2.
 
 **Ground UPS DB (common):**
 
@@ -703,8 +738,11 @@ approval.
 + SPD Type 2 + over/under-voltage relay; then one circuit per appliance as the table in 2.9
 (3 AC MCBs 20 A, 2 geyser MCBs 16 A, induction, microwave, kitchen sockets, fridge, washing
 machine, iron sockets, dishwasher spare, all 16 A). Penthouse: 2 ACs and 1 geyser.
-UDB = 4-pole RCCB 25 A 30 mA Type A; 6 A MCB per phase zone (R bedrooms, Y living/utility,
-B TV/work/router/bath lights); 1 spare (fridge, if cuts run long).
+UDB = 4-pole RCCB 25 A 30 mA Type A; 3 A MCB per phase zone (2 A in the penthouse); 3 A sockets
+only, not universal 6/16 A sockets; 1 spare (fridge, if cuts run long). Backup phases rotate
+with the same table as the grid phases. Voltage relay on each grid board: about 180-275 V,
+restart delay about 3 minutes. Geyser, induction, microwave, washing machine and power sockets
+in 4 mm2, not 2.5 mm2. Fridge on 2.5 mm2 with a 10 A breaker.
 
 **Grid-side phase rotation** (keeps each meter balanced when everyone runs ACs):
 
@@ -819,7 +857,7 @@ Hyderabad rock usually needs chemical / maintenance-free electrodes.
 | Floors | GDB, 3-phase 8-way, one circuit per appliance (2.9) | 5 + Ground pumps board | building scope |
 | Floors | Isolator at each AC outdoor unit, 2-pole 32 A, weatherproof | 14 | building scope |
 | Floors | UPS DB, TPN 4-way, distinct colour | 6 | ₹0.36-0.6 L |
-| Floors | 6 A work-station sockets, coloured UPS switch plates | 5 sets | building scope |
+| Floors | 3 A work sockets, not universal 6/16 A, coloured backup plates | 5 sets | building scope |
 | Floors | BLDC fans on backup circuits | 19 | owner |
 | Cables | Backup risers 4C x 2.5/4 mm2 | ~135 m | ₹0.26-0.44 L |
 | Cables | Grid risers 4C x 10 mm2 armoured; lift 4C x 10 mm2 | ~170 m | building scope |
@@ -843,6 +881,7 @@ Hyderabad rock usually needs chemical / maintenance-free electrodes.
 | Input line choke / harmonic filter | Lift vendor | Less harmonic stress on the inverter |
 | No power-factor capacitor on the lift feeder | Electrician | Avoids resonance with the inverter |
 | Automatic Rescue Device (ARD) | Lift vendor | Brings the car to a floor if both grid and inverter fail |
+| Acceleration power cap, and a contactor that drops the lift before the inverter limit | Lift vendor / electrician | A lift start must not black out the lights |
 | Interface relays for PuREPower dry contacts | Electrician | On battery = energy-saving mode; under 20 % = park, doors open, lock out |
 | Dedicated earth (2 pits) + bonding of rails and machine | Electrician | Lift code |
 
@@ -850,17 +889,21 @@ Hyderabad rock usually needs chemical / maintenance-free electrodes.
 
 ## 12. Open items (VERIFY)
 
-1. PuREPower **per-phase breaker rating**. The total is now confirmed at 20 kVA (maker's own
-   product page, Oct 2026); this plan assumes an even 3-way split, about 6.7 kW per phase, but
-   that split itself is not published and needs a written answer.
+1. PuREPower **per-phase breaker rating**, pass-through rating, and whether it holds 150 percent
+   for about 10 seconds. The nameplate is 20 kVA. This plan stops at 17.5 kW and caps grid
+   recharge at 2.5 kW. Do not energise the backup earth-leakage devices until the maker confirms
+   in writing whether the neutral opens in a cut, and that any neutral-earth link is inside the
+   inverter and only while the grid is dead. The export sensor must sit on the Meter 2 incomer.
+   The per-phase split itself is not published and still needs a written answer.
 2. Does the PuREPower switch the neutral in a power cut? Neutral-Earth (N-E) link provided?
 3. Certificates for TGSPDCL net metering; the exact menu name for "export once battery is above
    85 %" (2.1); grid-charge current limit; where the zero-export/net-export CT sits.
 4. Dry contacts: count and signals.
 5. What the ₹5.5 lakh includes; battery chemistry (LFP assumed) and warranty terms beyond the
    published 5-year standard / 12-year extended split.
-6. TGSPDCL: is the sanctioned load counted per appliance (C: Meter 2 = 69.4 kW, over the LT
-   limit) or on expected peak (C: 17 kW Meter 1, 44 kW Meter 2)? This decides Layout C or B.
+6. TGSPDCL: is the sanctioned load counted per appliance (Layout C with pumps on Meter 2:
+   about 29 kW and 72 kW, Meter 2 over the LT limit) or on expected peak (about 14 kW and 47 kW)?
+   This decides Layout C or B. If you move to Layout B, move the pump switch to Meter 1 as well.
    Also: the LT limit (assumed 56 kW); service-line charge per kW (about ₹10,000/kW above
    20 kW under TGERC Regulation 1 of 2026?); the floor split and the two transfer switches;
    whether moving a transfer switch needs a fresh connection application each time; private

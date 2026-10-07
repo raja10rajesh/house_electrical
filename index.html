@@ -49,7 +49,7 @@
       <section class="intro" aria-labelledby="title">
         <div>
           <h1 id="title">Solar, battery backup and private metering for six floors</h1>
-          <p class="lede">Two net meters from TGSPDCL, the power company, feed the building. Meter 2 carries the PuREPower hybrid inverter, 12 kW of solar panels and the heavier floors; Meter 1 is a net meter too, it just has no generation behind it yet. Every floor is billed by its own private meters, and lights, fans and the lift never blink in a power cut.</p>
+          <p class="lede">Two net meters from TGSPDCL, the power company, feed the building. Meter 2 carries the PuREPower hybrid inverter, 14 kW of solar panels, the heavier floors and the common pumps. Meter 1 is a net meter too; it has no generation behind it yet. The car charger, when fitted, sits after Meter 2 and before the inverter. Lights, fans and the lift never blink in a power cut. The backup bus is planned to 17.5 kW, not the 20 kVA nameplate.</p>
           <div class="facts" id="facts"></div>
         </div>
         <div class="decisions">
@@ -59,10 +59,11 @@
             <dt>Floor wiring</dt><dd>Two boards per home: grid board + backup board</dd>
             <dt>Appliances</dt><dd>Air conditioners, geysers, kitchen, fridge and washing machine on the grid board, one circuit each; they go off in a power cut</dd>
             <dt>Floor metering</dt><dd>Two private meters per floor, grid and backup (one dual meter also compared)</dd>
-            <dt>Solar</dt><dd>12 kW, 3 strings of 7 panels</dd>
-            <dt>Battery</dt><dd>Backup first: kept at 85-100 %</dd>
-            <dt>Backup limit</dt><dd>1.5 kW per home, Penthouse 1.0 kW</dd>
-            <dt>Phases</dt><dd>3-phase backup in every home</dd>
+            <dt>Solar</dt><dd>14 kW, 3 strings of 8 panels. Monthly net metering is the rule, not an option.</dd>
+            <dt>Battery</dt><dd>Backup first. Summer float near 90 %, not held at 100 % in a hot room.</dd>
+            <dt>Backup limit</dt><dd>1.5 kW per home, Penthouse 1.0 kW. Design ceiling 17.5 kW on the inverter.</dd>
+            <dt>Phases</dt><dd>3-phase backup in every home, work-socket phase rotates by floor</dd>
+            <dt>Car charger</dt><dd>On the solar main panel, after Meter 2, before the inverter</dd>
             <dt>Billing</dt><dd>Two bills pooled and split by meter readings; common area split by 5 homes</dd>
             <dt>Group net metering</dt><dd>Not used</dd>
           </dl>
@@ -110,8 +111,8 @@
             <span><i style="border-color:var(--solar)"></i>Solar panel cable</span>
             <span><i class="dash" style="border-color:var(--m2)"></i>Bypass line (Day 1, servicing)</span>
             <span><i class="dash" style="border-color:var(--dead)"></i>Dead in a power cut</span>
-            <span><i style="border-color:var(--warn)"></i>Floor emergency isolator (grid + backup)</span>
-            <span><i class="dash" style="border-color:var(--line-strong)"></i>Bus-tie switch (open = two meters, closed = one)</span>
+            <span><i style="border-color:var(--warn)"></i>Floor cut-off (two switches, one hasp)</span>
+            <span><i class="dash" style="border-color:var(--line-strong)"></i>Bus-tie breaker (open = two meters, key-locked)</span>
           </div>
         </div>
         <p class="small muted" style="margin-top:12px" id="sldNote"></p>
@@ -187,7 +188,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2 id="h-phases">Phase balance on the backup side</h2>
-          <p>The PuREPower Home 20.0 is rated 20 kVA in total (confirmed by the maker); split evenly that is about 6.7 kW per phase (still to be confirmed). Compare one phase per home with 3-phase backup in every home.</p>
+          <p>The nameplate is 20 kVA. This plan stops at 17.5 kW so heat, power factor and a lift start have slack. Three-phase backup in every home keeps that true when floors are empty. One phase per home does not.</p>
         </div>
         <div class="controls">
           <div class="control"><span class="label">Load on each home</span><div class="seg" id="phLoad"></div></div>

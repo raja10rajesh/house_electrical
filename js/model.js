@@ -52,43 +52,45 @@
       circuit('grid', 'R', 'Air conditioner, bedroom 1 (1.5 ton)', 1.6, '20 A', '4 sq mm'),
       circuit('grid', 'Y', 'Air conditioner, bedroom 2 (1.5 ton)', 1.6, '20 A', '4 sq mm'),
       circuit('grid', 'B', 'Air conditioner, living room (1.5 ton)', 1.6, '20 A', '4 sq mm'),
-      circuit('grid', 'R', 'Geyser, bathroom 1 (25 litre)', 2.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'Y', 'Geyser, bathroom 2 (25 litre)', 2.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'R', 'Induction cooktop', 2.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'Y', 'Microwave / oven', 1.4, '16 A', '2.5 sq mm'),
-      circuit('grid', 'Y', 'Kitchen sockets: mixer, chimney, water purifier', 1.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'R', 'Fridge', 0.25, '16 A', '2.5 sq mm'),
-      circuit('grid', 'B', 'Washing machine', 2.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'B', 'Iron and power sockets', 1.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'B', 'Dishwasher (spare circuit)', 1.5, '16 A', '2.5 sq mm', true),
-      circuit('backup', 'R', 'Bedroom fans and lights', 0.25, '6 A', '1.5 sq mm'),
-      circuit('backup', 'Y', 'Living, dining, utility fans, lights', 0.2, '6 A', '1.5 sq mm'),
-      circuit('backup', 'B', 'TV, router, work socket, bath lights', 0.3, '6 A', '1.5 sq mm'),
-      circuit('backup', 'R', 'Spare: fridge, for long power cuts', 0.25, '6 A', '1.5 sq mm', true),
+      circuit('grid', 'R', 'Geyser, bathroom 1 (25 litre)', 2.0, '16 A', '4 sq mm'),
+      circuit('grid', 'Y', 'Geyser, bathroom 2 (25 litre)', 2.0, '16 A', '4 sq mm'),
+      circuit('grid', 'R', 'Induction cooktop', 2.0, '16 A', '4 sq mm'),
+      circuit('grid', 'Y', 'Microwave / oven', 1.4, '16 A', '4 sq mm'),
+      circuit('grid', 'Y', 'Kitchen sockets: mixer, chimney, water purifier', 1.0, '16 A', '4 sq mm'),
+      circuit('grid', 'R', 'Fridge', 0.25, '10 A', '2.5 sq mm'),
+      circuit('grid', 'B', 'Washing machine', 2.0, '16 A', '4 sq mm'),
+      circuit('grid', 'B', 'Iron and power sockets', 1.0, '16 A', '4 sq mm'),
+      circuit('grid', 'B', 'Dishwasher (spare circuit)', 1.5, '16 A', '4 sq mm', true),
+      circuit('backup', 'R', 'Bedroom fans and lights', 0.25, '3 A', '1.5 sq mm'),
+      circuit('backup', 'Y', 'Living, dining, utility fans, lights', 0.2, '3 A', '1.5 sq mm'),
+      circuit('backup', 'B', 'TV, router, work socket, bath lights', 0.3, '3 A', '1.5 sq mm'),
+      circuit('backup', 'R', 'Spare: fridge, for long power cuts', 0.25, '3 A', '1.5 sq mm', true),
     ],
     penthouse: [
       circuit('grid', 'R', 'Air conditioner, bedroom (1.5 ton)', 1.6, '20 A', '4 sq mm'),
       circuit('grid', 'Y', 'Air conditioner, living room (1.5 ton)', 1.6, '20 A', '4 sq mm'),
-      circuit('grid', 'B', 'Geyser, bathroom (25 litre)', 2.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'R', 'Induction cooktop', 2.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'Y', 'Microwave / oven', 1.4, '16 A', '2.5 sq mm'),
-      circuit('grid', 'Y', 'Kitchen sockets: mixer, chimney, water purifier', 1.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'R', 'Fridge', 0.25, '16 A', '2.5 sq mm'),
-      circuit('grid', 'B', 'Washing machine', 2.0, '16 A', '2.5 sq mm'),
-      circuit('grid', 'B', 'Iron and power sockets', 1.0, '16 A', '2.5 sq mm'),
-      circuit('backup', 'R', 'Bedroom fans and lights', 0.15, '6 A', '1.5 sq mm'),
-      circuit('backup', 'Y', 'Living and dining fans, lights', 0.15, '6 A', '1.5 sq mm'),
-      circuit('backup', 'B', 'TV, router, work socket, bath light', 0.3, '6 A', '1.5 sq mm'),
-      circuit('backup', 'R', 'Spare: fridge, for long power cuts', 0.25, '6 A', '1.5 sq mm', true),
+      circuit('grid', 'B', 'Geyser, bathroom (25 litre)', 2.0, '16 A', '4 sq mm'),
+      circuit('grid', 'R', 'Induction cooktop', 2.0, '16 A', '4 sq mm'),
+      circuit('grid', 'Y', 'Microwave / oven', 1.4, '16 A', '4 sq mm'),
+      circuit('grid', 'Y', 'Kitchen sockets: mixer, chimney, water purifier', 1.0, '16 A', '4 sq mm'),
+      circuit('grid', 'R', 'Fridge', 0.25, '10 A', '2.5 sq mm'),
+      circuit('grid', 'B', 'Washing machine', 2.0, '16 A', '4 sq mm'),
+      circuit('grid', 'B', 'Iron and power sockets', 1.0, '16 A', '4 sq mm'),
+      circuit('backup', 'R', 'Bedroom fans and lights', 0.15, '2 A', '1.5 sq mm'),
+      circuit('backup', 'Y', 'Living and dining fans, lights', 0.15, '2 A', '1.5 sq mm'),
+      circuit('backup', 'B', 'TV, router, work socket, bath light', 0.3, '2 A', '1.5 sq mm'),
+      circuit('backup', 'R', 'Spare: fridge, for long power cuts', 0.25, '2 A', '1.5 sq mm', true),
     ],
   };
   // Borewell pump never goes on backup. The sump-to-overhead-tank transfer pump is the only pump
   // considered for backup, and only with the lift/battery interlock in 2.7 (default: grid, like the borewell pump).
   const COMMON_GRID = [
     circuit('grid', 'R', 'Borewell pump (never on backup)', 1.1, '20 A', '4 sq mm'),
-    circuit('grid', 'Y', 'Sump-to-overhead-tank transfer pump (optional backup, see 2.7)', 0.75, '16 A', '2.5 sq mm'),
-    circuit('grid', 'B', 'Outdoor and common sockets', 1.15, '16 A', '2.5 sq mm'),
+    circuit('grid', 'Y', 'Sump-to-overhead-tank transfer pump (optional backup, see 2.7)', 0.75, '16 A', '4 sq mm'),
+    circuit('grid', 'B', 'Outdoor and common sockets', 1.15, '16 A', '4 sq mm'),
   ];
+  // Design ceiling for the backup bus. Nameplate is 20 kVA; 17.5 kW leaves slack for heat, power factor and a lift start.
+  const DESIGN_MAX_KW = 17.5;
   const PHASE_ROTATION = { F1: 0, F2: 1, F3: 2, F4: 0, PH: 1 };
   const LT_LIMIT_KW = 56; // above this TGSPDCL supplies at high tension (11 kV) - confirm
 
@@ -96,7 +98,9 @@
   function homeCircuits(id) {
     if (id === 'G') return COMMON_GRID;
     const list = id === 'PH' ? HOME_CIRCUITS.penthouse : HOME_CIRCUITS.full;
-    return list.map((c) => (c.side === 'grid' ? Object.assign({}, c, { phase: rotatePhase(c.phase, PHASE_ROTATION[id] || 0) }) : c));
+    // Rotate grid and backup the same way. An empty floor then takes the same share off R, Y and B.
+    const n = PHASE_ROTATION[id] || 0;
+    return list.map((c) => Object.assign({}, c, { phase: rotatePhase(c.phase, n) }));
   }
   const sumKw = (list) => list.reduce((s, c) => s + (c.optional ? 0 : c.kw), 0);
   const gridConnectedKw = (id) => sumKw(homeCircuits(id).filter((c) => c.side === 'grid'));
@@ -110,15 +114,17 @@
 
   const DEFAULTS = {
     arch: 'C',
-    pvKwp: 12,
+    pvKwp: 14, // cliff balance: 24 panels. 12 kWp left both meters about 50 units under the 800-unit line.
     bldc: true,
     pumpOnBackup: false,
+    pumpsOnMeter2: true, // common pumps on Meter 2 grid side, not through the inverter. See cliff balance.
     ev: false,
     evUnits: 240,
-    evKw: 7.4,
+    evKw: 7.4, // charger sits on Meter 2, before the inverter. 7.4 kW is the socket rating, not an inverter load.
     occupancy: { F1: true, F2: true, F3: true, F4: true, PH: true },
     inverterSelfUse: 80, // units/month: standby + battery upkeep (VERIFY)
-    inverterKw: 20, // PuREPower Home 20.0 = 20 kVA rated power (confirmed, PURE Energy product page, Oct 2026)
+    inverterKw: 20, // PuREPower Home 20.0 nameplate, kVA (confirmed). Do not plan the backup bus up to this.
+    designMaxKw: DESIGN_MAX_KW, // backup-bus ceiling, kW, with slack under the 20 kVA nameplate
     billing: 'pooled', // pooled | fixed | pooledFee
     fixedRate: 10,
     solarFee: 800, // per home per month, only for pooledFee
@@ -195,25 +201,32 @@
     return { id: f.id, occ, grid, backup };
   }
 
+  function pumpsOnM2(o) {
+    return !!(o.pumpsOnMeter2 && !o.pumpOnBackup);
+  }
+
   function sanctioned(o) {
     const arch = resolveArch(o);
     let kw1 = 0;
     let kw2 = o.inverterKw;
     for (const f of FLOORS) {
       if (f.common) {
-        if (!o.pumpOnBackup) kw1 += f.kw;
+        if (o.pumpOnBackup) {
+          // Running watts sit inside the inverter rating. Not added again.
+        } else if (pumpsOnM2(o)) kw2 += f.kw;
+        else kw1 += f.kw;
       } else if (arch.m2Grid.includes(f.id)) kw2 += f.kw;
       else kw1 += f.kw;
     }
-    // EV charging is wired post-inverter (backup bus), sharing the inverter's own kVA rather than
-    // adding to Meter 2's sanctioned ask directly - see inverterLoadCheck() for its headroom.
+    // Charger is after Meter 2 and before the inverter, so it adds to Meter 2's ask, not the backup bus.
+    if (o.ev) kw2 += o.evKw;
     // Net metering needs sanctioned load >= solar size.
     kw2 = Math.max(kw2, o.pvKwp);
     return { kw1, kw2 };
   }
 
   /* If TGSPDCL counts every appliance at its rating (connected load) instead of expected maximum demand.
-     The backup side is counted as the inverter output; EV is post-inverter, see inverterLoadCheck(). */
+     The backup side is counted as the inverter output. The charger is on Meter 2, before the inverter. */
   function connectedLoad(opts) {
     const o = merge(opts);
     const arch = resolveArch(o);
@@ -222,23 +235,36 @@
     for (const f of FLOORS) {
       const kw = gridConnectedKw(f.id);
       if (f.common) {
-        if (!o.pumpOnBackup) m1 += kw;
+        if (o.pumpOnBackup) {
+          // not added; the inverter rating already covers the backup bus
+        } else if (pumpsOnM2(o)) m2 += kw;
+        else m1 += kw;
       } else if (arch.m2Grid.includes(f.id)) m2 += kw;
       else m1 += kw;
     }
+    if (o.ev) m2 += o.evKw;
     return { m1, m2, limit: LT_LIMIT_KW, fits: m1 <= LT_LIMIT_KW && m2 <= LT_LIMIT_KW };
   }
 
-  /* Worst case backup-bus kW (every home at its limit, lift running, optional pump) plus the EV
-     charger, against the inverter's own kVA rating - the real constraint now EV is post-inverter. */
+  /* Worst-case backup bus against the 17.5 kW design ceiling, not the 20 kVA nameplate.
+     The charger is not on this bus. */
   function inverterLoadCheck(opts) {
     const o = merge(opts);
     const homeKw = {};
     for (const h of HOMES) homeKw[h.id] = h.limit;
-    const backupKw = phaseLoads({ strategy: 'PB2', homeKw, liftRunning: true, pumpOnBackup: o.pumpOnBackup }).total;
-    const evKw = o.ev ? o.evKw : 0;
-    const total = backupKw + evKw;
-    return { backupKw, evKw, total, limit: o.inverterKw, fits: total <= o.inverterKw };
+    const phases = phaseLoads({ strategy: o.phase || 'PB2', homeKw, liftRunning: true, pumpOnBackup: o.pumpOnBackup });
+    const limit = o.designMaxKw || DESIGN_MAX_KW;
+    return {
+      backupKw: phases.total,
+      evKw: 0,
+      chargerKw: o.ev ? o.evKw : 0,
+      total: phases.total,
+      limit,
+      nameplate: o.inverterKw,
+      slack: limit - phases.total,
+      fits: phases.total <= limit && phases.max <= limit / 3,
+      phases,
+    };
   }
 
   function monthly(opts) {
@@ -247,13 +273,13 @@
     const { kw1, kw2 } = sanctioned(o);
     const rows = MONTHS.map((name, i) => {
       const floors = FLOORS.map((f) => floorMonth(f, i, o));
-      const onM2 = (fl) => arch.m2Grid.includes(fl.id);
+      const onM2 = (fl) => (fl.id === 'G' ? pumpsOnM2(o) : arch.m2Grid.includes(fl.id));
       const ev = o.ev ? o.evUnits : 0;
-      // EV rides the backup bus (post-inverter), so it always reaches Meter 2 via m2Gross either
-      // way; grouping it into backupBus here just keeps the circuit topology honest.
-      const backupBus = floors.reduce((s, fl) => s + fl.backup, 0) + o.inverterSelfUse + ev;
+      // Charger is on the solar main panel, after Meter 2 and before the inverter. It adds to
+      // Meter 2's import, so monthly netting offsets it. It does not ride the backup bus.
+      const backupBus = floors.reduce((s, fl) => s + fl.backup, 0) + o.inverterSelfUse;
       const m1 = floors.filter((fl) => !onM2(fl)).reduce((s, fl) => s + fl.grid, 0);
-      const m2Gross = backupBus + floors.filter(onM2).reduce((s, fl) => s + fl.grid, 0);
+      const m2Gross = backupBus + floors.filter(onM2).reduce((s, fl) => s + fl.grid, 0) + ev;
       const solar = o.pvKwp * SOLAR_YIELD[i];
       const m2Net = m2Gross - solar;
       const bill1 = meterBill(m1, kw1);
@@ -388,8 +414,9 @@
     add('Panels', 'Solar main panel (Meter 2), with lockable solar isolator and Floor 2 transfer switch', 45000, 75000, true);
     add('Panels', 'Floor 1 transfer switch, fitted as standard (clears an empty-floor surplus)', 40000, 80000, true);
     add('Backup', 'Backup main board with bypass switch, phase selectors, load-shedding switch', 45000, 80000);
-    add('Panels', 'Bus-tie switch, 4-pole 125 A on-load changeover, mechanically interlocked (2.10 one-meter contingency, kept open until needed)', 90000, 120000, true);
-    add('Backup', 'Floor emergency isolators, 4-pole TPN 63 A lockable, grid + backup together', 6 * 3000, 6 * 6000, true);
+    add('Panels', 'Bus-tie breaker 4-pole 160 A, trapped-key interlock, 70 sq mm tie (kept open; closes only after one meter is removed)', 100000, 160000, true);
+    add('Panels', 'Pump feeder transfer switch, 4-pole 20 A (default Meter 2, alternate Meter 1)', 8000, 15000, true);
+    add('Backup', 'Floor emergency isolators, two 4-pole switches per floor with one padlock hasp', 12 * 2000, 12 * 4000, true);
     if (o.metering === 'MA') {
       add('Metering', '6 dual 3-phase private meters: grid half of the cost', 6 * 4500, 6 * 8000, true);
       add('Metering', '6 dual 3-phase private meters: backup half of the cost', 6 * 3500, 6 * 7000);
@@ -409,7 +436,7 @@
     add('Backup', 'Extra earth pits: solar and inverter (2) + inverter neutral (1-2), chemical', 24000, 48000);
     add('Backup', 'Lift interface: phase-sequence relay, surge protector, interface relays', 8000, 20000);
     if (o.pumpOnBackup) add('Options', 'Overhead-tank pump on backup: contactor, timer, lift/battery interlock', 5000, 10000);
-    if (o.ev) add('Options', 'Car charger circuit: post-inverter, 32 A MCB + Type B earth-leakage device (IS 17017), 6 sq mm cable to parking', 14000, 22000);
+    if (o.ev) add('Options', 'Car charger circuit: solar main panel, after Meter 2, before the inverter. 32 A breaker + Type B earth-leakage device, 6 sq mm to parking', 14000, 22000);
     const sum = (list, k) => list.reduce((s, it) => s + it[k], 0);
     const sys = items.filter((it) => !it.base);
     const base = items.filter((it) => it.base);
@@ -465,8 +492,29 @@
     const min = Math.min(...vals);
     const total = vals.reduce((a, b) => a + b, 0);
     const avg = total / 3;
-    // 20 kVA nameplate (confirmed) split evenly over 3 phases; the per-phase split itself is still VERIFY with PuREnergy.
-    return { ...ph, total, max, imbalance: avg ? (max - min) / avg : 0, perPhaseLimit: 20 / 3, totalLimit: 20 };
+    // Design ceiling 17.5 kW, not the 20 kVA nameplate. Per-phase split is still VERIFY with PuREnergy.
+    return { ...ph, total, max, imbalance: avg ? (max - min) / avg : 0, perPhaseLimit: DESIGN_MAX_KW / 3, totalLimit: DESIGN_MAX_KW, nameplateKw: 20 };
+  }
+
+  /* Every occupancy mask. With 3-phase backup, an empty floor removes the same load from R, Y and B,
+     so the busiest case is always "everyone home", not a random vacant pattern. */
+  function vacancyAudit(pumpOnBackup) {
+    const ids = HOMES.map((h) => h.id);
+    let worst = null;
+    let allFit = true;
+    for (let mask = 0; mask < 32; mask++) {
+      const occupancy = {};
+      ids.forEach((id, i) => { occupancy[id] = (mask & (1 << i)) !== 0; });
+      const w = worstCase('PB2', occupancy, !!pumpOnBackup);
+      const row = {
+        occupied: ids.filter((id) => occupancy[id]),
+        max: w.max, total: w.total, imbalance: w.imbalance,
+        fits: w.max <= w.perPhaseLimit && w.total <= w.totalLimit,
+      };
+      if (!row.fits) allFit = false;
+      if (!worst || w.max > worst.max) worst = row;
+    }
+    return { worst, allFit, masks: 32 };
   }
 
   function worstCase(strategy, occupancy, pumpOnBackup) {
@@ -503,10 +551,10 @@
 
   function dailySim(opts) {
     const p = Object.assign({
-      season: 'summer', pvKwp: 12, arch: 'C', mode: 'B1', bldc: true, pumpOnBackup: false, ev: false,
+      season: 'summer', pvKwp: 14, arch: 'C', mode: 'B1', bldc: true, pumpOnBackup: false, pumpsOnMeter2: true, ev: false,
       outage: null, // { start: hour, end: hour }
       occupancy: DEFAULTS.occupancy, battKwh: 20, socStart: 1.0, reserve: 0.85, balancedFloor: 0.5,
-      maxCharge: 10, maxDischarge: 15, gridChargeKw: 3.2, eff: 0.96,
+      maxCharge: 10, maxDischarge: 15, gridChargeKw: 2.5, eff: 0.96, evKw: 7.4,
     }, opts);
     const occ = Object.assign({}, DEFAULTS.occupancy, p.occupancy);
     const s = SEASONS[p.season];
@@ -559,10 +607,10 @@
       const pumpWindow = (h >= 6 && h < 7.5) || (h >= 17.5 && h < 19);
       const pump = p.pumpOnBackup && pumpWindow && (gridOn || socPct > 50) ? 1.0 : 0;
       const selfUse = 0.11;
-      // EV charger is wired post-inverter (backup bus): solar/battery first, grid pass-through
-      // second, and it sheds automatically with the rest of the backup bus in a power cut.
-      const ev = p.ev && h >= 10 && h < 14 && gridOn ? 2.0 : 0;
-      const backupLoad = homes + lights + watchman + lift + pump + selfUse + ev;
+      // Charger is on the solar main panel, after Meter 2, before the inverter. Noon window so
+      // export on that bus offsets it. It is off in a power cut (the panel bus is dead).
+      const ev = p.ev && h >= 10 && h < 14 && gridOn ? (p.evKw || 7.4) : 0;
+      const backupLoad = homes + lights + watchman + lift + pump + selfUse;
       // Heavy loads (grid side)
       let heavy1 = 0;
       let heavy2 = 0;
@@ -571,7 +619,11 @@
         if (arch.m2Grid.includes(hm.id)) heavy2 += kw;
         else heavy1 += kw;
       }
-      if (!p.pumpOnBackup && pumpWindow) heavy1 += 1.0;
+      if (!p.pumpOnBackup && pumpWindow) {
+        if (p.pumpsOnMeter2) heavy2 += 1.0;
+        else heavy1 += 1.0;
+      }
+      if (gridOn) heavy2 += ev;
       const pv = (solarDay / solarNorm) * solarShape(h);
       let pvToLoad = Math.min(pv, backupLoad);
       let remPv = pv - pvToLoad;
@@ -605,7 +657,7 @@
       }
       soc += (charge * p.eff + gridCharge * p.eff - discharge) * dt;
       soc = Math.max(0, Math.min(p.battKwh, soc));
-      // ev already flows into m2 via backupLoad -> deficit -> gridToBus, so it is not added again here.
+      // Charger and pumps-on-Meter-2 are already inside heavy2, so they are not added again.
       const m2 = gridOn ? gridToBus + gridCharge + heavy2 - exp : 0;
       const m1 = gridOn ? heavy1 : 0;
       const row = {
@@ -676,7 +728,7 @@
     MONTHS, SOLAR_YIELD, GRID_SEASON, FAN_SEASON, TARIFF, FLOORS, HOMES, ARCHS, DEFAULTS, SEASONS, PB1_MAP,
     HOME_CIRCUITS, COMMON_GRID, PHASE_ROTATION, LT_LIMIT_KW,
     energyCharge, customerCharge, meterBill, monthly, billing, annual, annualOneMeter, monthlyOneMeter, capex, sanctioned, resolveArch,
-    homeCircuits, gridConnectedKw, connectedLoad, inverterLoadCheck,
-    phaseLoads, worstCase, dailySim, backupHours, combos,
+    homeCircuits, gridConnectedKw, connectedLoad, inverterLoadCheck, pumpsOnM2,
+    phaseLoads, worstCase, vacancyAudit, dailySim, backupHours, combos, DESIGN_MAX_KW,
   };
 });

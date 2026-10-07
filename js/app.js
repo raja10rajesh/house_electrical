@@ -107,7 +107,11 @@
   const HOME_IDS = ['F1', 'F2', 'F3', 'F4', 'PH'];
   const LABEL = { G: 'Ground', F1: 'Floor 1', F2: 'Floor 2', F3: 'Floor 3', F4: 'Floor 4', PH: 'Penthouse' };
   const occAll = () => ({ F1: true, F2: true, F3: true, F4: true, PH: true });
-  const meterOf = (arch, id) => (S.meterMode === 'one' ? 'M2' : id === 'G' ? 'M1' : M.ARCHS[arch].m2Grid.includes(id) ? 'M2' : 'M1');
+  const meterOf = (arch, id) => {
+    if (S.meterMode === 'one') return 'M2';
+    if (id === 'G') return M.DEFAULTS.pumpsOnMeter2 ? 'M2' : 'M1';
+    return M.ARCHS[arch].m2Grid.includes(id) ? 'M2' : 'M1';
+  };
   const METER_NAME = { M1: 'Meter 1', M2: 'Meter 2' };
   const meterLabel = (mtr) => (S.meterMode === 'one' ? 'Meter (combined)' : METER_NAME[mtr]);
   const ARCH_LABEL = { A: 'A: inverter only', B: 'B: inverter + Floors 3-4', C: 'C: inverter + Floors 2-4' };
@@ -131,9 +135,9 @@
     layers: { grid: true, backup: true, solar: true, earth: false },
     floor: 'F2',
     sld: { arch: 'C', view: 'normal' },
-    sim: { season: 'summer', outage: 'none', mode: 'B1', pv: 12, occ: occAll(), extras: { pump: false, ev: false }, t: 48, timer: null },
+    sim: { season: 'summer', outage: 'none', mode: 'B1', pv: 14, occ: occAll(), extras: { pump: false, ev: false }, t: 48, timer: null },
     ph: { load: 'limit', occ: occAll(), lift: true, pump: false },
-    b: { arch: 'C', pv: 12, billing: 'pooled', fee: 800, rate: 10, subsidy: 'dcr-sub', metering: 'MB', phase: 'PB2', occ: occAll(), extras: { bldc: true, pump: false, ev: false } },
+    b: { arch: 'C', pv: 14, billing: 'pooled', fee: 800, rate: 10, subsidy: 'dcr-sub', metering: 'MB', phase: 'PB2', occ: occAll(), extras: { bldc: true, pump: false, ev: false } },
     sort: { col: 7, dir: 1 },
     showAll: false,
     home: { id: 'F2', view: 'normal' },
@@ -156,13 +160,13 @@
 
   /* ---------------- Intro facts ---------------- */
   function renderFacts() {
-    const a = M.annual({ arch: 'C', pvKwp: 12 });
+    const a = M.annual({ arch: 'C' });
     const n = M.annual({ arch: 'C', pvKwp: 0 });
     const ev = M.dailySim({ season: 'summer' }).steps.filter((s) => s.h >= 19 && s.h < 23);
     const evening = ev.reduce((x, s) => x + s.backupLoad, 0) / ev.length;
     const facts = [
       ['2', 'TGSPDCL meters; both stay under 800 units every month'],
-      [Math.round(a.solarUnits).toLocaleString('en-IN'), 'solar units a year from 12 kW of panels'],
+      [Math.round(a.solarUnits).toLocaleString('en-IN'), 'solar units a year from ' + M.DEFAULTS.pvKwp + ' kW of panels'],
       [lakh(n.bill1 + n.bill2 - a.bill1 - a.bill2), 'cut from the two bills each year'],
       [M.backupHours(evening, 85).toFixed(1) + ' h', 'battery backup at a summer evening load, starting at 85 %'],
     ];
@@ -202,7 +206,7 @@
       el('rect', { x, y: 84, width: 42, height: 22, fill: css('--solar-fill'), stroke: css('--solar'), 'stroke-width': 1.2, transform: `skewX(-12)` }, pv);
     }
     for (const x of [86, 200, 320]) el('line', { x1: x, y1: 106, x2: x, y2: x < 150 ? 210 : 134, stroke: css('--muted'), 'stroke-width': 1.2 }, pv);
-    txt(pv, 75, 70, '12 kW of solar on a raised frame, 3 strings of 7 panels', { 'font-size': 12, class: 't-strong' });
+    txt(pv, 75, 70, '14 kW of solar on a raised frame, 3 strings of 8 panels', { 'font-size': 12, class: 't-strong' });
 
     // Floors
     const order = ['PH', 'F4', 'F3', 'F2', 'F1', 'G'];
@@ -261,7 +265,7 @@
     for (const id of order.filter((x) => x !== 'G')) el('path', { d: `M 382 ${yOf(id) + 8} L ${FLOOR_GEOM[id].x + FLOOR_GEOM[id].w - 2} ${yOf(id) + 8}`, class: 'wire bk' }, bkLayer);
     el('path', { d: 'M 382 560 L 382 572 L 410 572 L 410 150', class: 'wire bk' }, bkLayer);
     const pvLayer = el('g', { class: S.layers.solar ? '' : 'layer-off' }, rise);
-    el('path', { d: 'M 390 106 L 390 556 L 350 556', class: 'wire pv' }, pvLayer);
+    el('path', { d: 'M 348 106 L 348 556', class: 'wire pv' }, pvLayer);
     // Earth pits
     const eLayer = el('g', { class: S.layers.earth ? '' : 'layer-off' }, g);
     const pits = [44, 66, 110, 132, 262, 284, 320, 410, 432];
@@ -306,8 +310,8 @@
       const gy = countOf(id, 'Geyser');
       const via = id === 'F2' && arch !== 'A' ? ' through the Floor 2 transfer switch' : '';
       rows.push(['Grid side', `${ac} air conditioners, ${gy} geyser${gy > 1 ? 's' : ''}, induction cooktop, microwave, kitchen sockets, fridge, washing machine, iron sockets: one circuit each, ${M.gridConnectedKw(id).toFixed(1)} kW if all ran at once (expected peak about ${h.kw} kW). Off in a power cut. Grid meter, fed from ${panel}${via}`]);
-      rows.push(['Backup side', `4 fans, room and bathroom lights, utility light, TV, 6 A work socket, router. Backup meter with ${h.limit} kW limit, fed from the backup main board (inverter)`]);
-      rows.push(['Backup board phases', 'R: bedrooms. Y: living, dining, utility. B: TV, work socket, router, bathroom lights']);
+      rows.push(['Backup side', `Fans, lights, TV, router, 3 A work socket (not a universal socket). Backup meter with ${h.limit} kW limit and a 3 A breaker per phase. Fed from the backup main board (inverter).`]);
+      rows.push(['Backup board phases', 'Rooms split over R, Y and B. The work-socket phase rotates with the floor, so an empty floor takes the same load off all three phases.']);
       rows.push(['Average use', S.b.occ[id] ? `${Math.round(grid)} grid + ${Math.round(backup)} backup units a month` : 'Vacant: about 16 units a month standby']);
       rows.push(['Pays (current Bills settings)', S.b.occ[id] ? rs(bill.perHome[id]) + ' a month, average' : 'Nothing; owner covers it']);
     }
@@ -403,16 +407,15 @@
       el('rect', { x: 879, y: y2 - 6, width: 10, height: 12, rx: 2, class: 'box', style: `stroke:${onM2 ? m2c : m1c};stroke-width:1.6` }, svg);
       txt(svg, 884, y2 + 19, 'transfer switch', { 'font-size': 9, 'text-anchor': 'middle', class: 'muted halo' });
     }
-    // Bus-tie switch: ties the Grid Main Panel into the Solar Main Panel bus so if TGSPDCL only
-    // ever sanctions one connection, the electrician closes this one interlocked switch instead of
-    // rewiring anything (2.10). Mechanically interlocked so both meters can never be paralleled live.
+    // Bus-tie breaker: ties the two panel busbars. Trapped-key interlock, not a changeover.
+    // It can close only after one meter breaker is locked off and that meter is removed.
     {
       const tieMid = 280;
       wire(`M 390 146 L 390 ${tieMid - 14}`, 'm1', oneMeter ? '' : 'dash');
       wire(`M 390 ${tieMid + 14} L 390 420`, 'm2', oneMeter ? '' : 'dash');
       el('rect', { x: 384, y: tieMid - 14, width: 12, height: 28, rx: 2, class: 'box', style: `stroke:${oneMeter ? m2c : css('--line-strong')};stroke-width:1.6` }, svg);
-      txt(svg, 404, tieMid - 10, 'Bus-tie switch', { 'font-size': 9.5, class: 't-strong halo' });
-      txt(svg, 404, tieMid + 4, oneMeter ? 'CLOSED: one meter' : 'open: two meters', { 'font-size': 9, class: (oneMeter ? '' : 'muted') + ' halo', fill: oneMeter ? warnc : null });
+      txt(svg, 404, tieMid - 10, 'Bus-tie breaker', { 'font-size': 9.5, class: 't-strong halo' });
+      txt(svg, 404, tieMid + 4, oneMeter ? 'CLOSED: one meter' : 'open, key-locked', { 'font-size': 9, class: (oneMeter ? '' : 'muted') + ' halo', fill: oneMeter ? warnc : null });
     }
     // Inverter chain
     wire('M 390 476 L 390 540', 'm2');
@@ -430,9 +433,8 @@
     for (const id of rows) { el('path', { d: `M 904 ${by(id)} L 940 ${by(id)}`, class: 'wire ' + busCls }, svg); dot(904, by(id), day1 ? css('--m2') : bkc); }
     // Solar
     el('path', { d: 'M 550 386 L 550 520', class: 'wire pv' }, svg);
-    // Car charger: post-inverter, off the backup board, so it gets solar/battery first and grid
-    // pass-through second; it sheds automatically (like every other backup load) during a power cut.
-    el('path', { d: 'M 830 584 L 830 602', class: day1 ? 'wire m2' : cut ? 'wire dead' : 'wire bk dash' }, svg);
+    // Car charger: after Meter 2, on the solar main panel bus, before the inverter.
+    el('path', { d: 'M 600 432 L 600 468', class: cut ? 'wire dead' : 'wire m2' }, svg);
     // TGSPDCL
     box(20, 260, 110, 70, 'TGSPDCL', '3-phase supply', cut ? css('--dead') : null);
     box(170, 90, 120, 56, oneMeter ? 'Meter 1 (idle)' : 'Meter 1', oneMeter ? 'tied in via bus-tie switch' : Math.round(sanc.kw1) + ' kW, net meter (grid only)', m1c);
@@ -440,12 +442,12 @@
     box(170, 420, 120, 56, oneMeter ? 'Meter (combined)' : 'Meter 2', Math.round(oneMeter ? combinedKw : sanc.kw2) + ' kW, net meter' + (oneMeter ? ', every floor + solar' : ' + solar'), m2c);
     box(330, 420, 120, 56, oneMeter ? 'Main panel (combined)' : 'Solar main panel', oneMeter ? 'carries every floor + inverter' : 'Meter 2 side', m2c);
     box(330, 540, 120, 44, 'Solar isolator', 'lockable, 2.44 m', m2c);
-    box(480, 330, 140, 56, 'Solar 12 kW', '3 strings of 7 panels', css('--solar'));
+    box(480, 330, 140, 56, 'Solar ' + M.DEFAULTS.pvKwp + ' kW', '3 strings of 8 panels', css('--solar'));
     const inv = box(480, 520, 140, 84, 'PuREPower 20.0', day1 ? 'not fitted yet' : cut ? 'on battery' : '20 kVA, 20 kWh', day1 ? css('--dead') : bkc);
     if (!day1) txt(inv, 550, 594, 'switches in 10 ms', { 'text-anchor': 'middle', 'font-size': 10, class: 'muted' });
     box(650, 540, 100, 44, 'Bypass', day1 ? 'position II' : 'position I', day1 ? css('--m2') : bkc);
     box(780, 540, 100, 44, 'Backup board', 'main, locked', day1 ? css('--m2') : bkc);
-    box(770, 602, 120, 36, 'Car charger', day1 ? 'future, spare circuit' : 'post-inverter, sheds in a cut', day1 ? css('--m2') : cut ? css('--dead') : bkc);
+    box(530, 468, 140, 36, 'Car charger', cut ? 'off in a power cut' : 'after meter, before inverter', cut ? css('--dead') : m2c);
     txt(svg, 712, 456, 'bypass line', { 'font-size': 10, class: 'muted' });
     // Floors
     rows.forEach((id, i) => {
@@ -458,12 +460,12 @@
       txt(svg, 960, y + 55, 'kWh', { 'text-anchor': 'middle', 'font-size': 10, class: 't-mono' });
       el('path', { d: `M 980 ${y + 17} L 996 ${y + 17}`, class: cut ? 'wire dead' : 'wire ' + (gm === 'M1' ? 'm1' : 'm2') }, svg);
       el('path', { d: `M 980 ${y + 51} L 996 ${y + 51}`, class: 'wire ' + (day1 ? 'm2' : 'bk') }, svg);
-      // Floor emergency isolator: one lockable 4-pole switch, grid + backup together.
+      // Floor emergency cut-off: two 4-pole switches, one padlock hasp.
       el('rect', { x: 985, y: y + 11, width: 7, height: 12, rx: 1.5, fill: 'none', stroke: warnc, 'stroke-width': 1.4 }, svg);
       el('rect', { x: 985, y: y + 45, width: 7, height: 12, rx: 1.5, fill: 'none', stroke: warnc, 'stroke-width': 1.4 }, svg);
       el('path', { d: `M 992 ${y + 17} L 992 ${y + 51}`, stroke: warnc, 'stroke-width': 1, 'stroke-dasharray': '2 2' }, svg);
       el('rect', { x: 996, y, width: 118, height: 70, rx: 5, class: 'box' }, svg);
-      txt(svg, 1006, y + 20, LABEL[id] + (id === 'F1' && !oneMeter ? ' (+ transfer switch)' : ''), { 'font-size': 13, class: 't-strong' });
+      txt(svg, 1006, y + 20, LABEL[id], { 'font-size': 13, class: 't-strong' });
       txt(svg, 1006, y + 38, (id === 'G' ? 'Pumps, ' : 'Grid board, ') + meterLabel(gm), { 'font-size': 11, fill: gc });
       txt(svg, 1006, y + 56, id === 'G' ? 'Lift + common' : 'Backup board', { 'font-size': 11, fill: day1 ? css('--m2') : bkc });
       const ap = applianceSummary(id);
@@ -486,8 +488,8 @@
         : 'Day 1: the inverter is not fitted yet. The bypass switch sits on position II, so the backup bus runs straight from Meter 2 and every private meter already bills.',
     };
     const archNote = oneMeter
-      ? ' With only one TGSPDCL connection, the bus-tie switch is closed so the Grid Main Panel feeds straight into the Solar Main Panel bus: no layout choice, no floor transfer switches, nothing rewired - just that one switch plus the now-redundant Meter 1 side left idle. Every floor also keeps its own lockable emergency isolator (grid + backup together, red marks before each floor\u2019s private meters).'
-      : ' ' + M.ARCHS[arch].note + ' Floor 1 has a standard transfer switch too (position I = Meter 1 by default); on its own it clears an empty-floor surplus on Meter 2, and together with the Floor 2 switch it gives a third split.' + (arch !== 'A' ? ' Floor 2\u2019s transfer switch: position I = Meter 1 (Layout B), position II = Meter 2 (Layout C).' : '') + ' Every floor also has its own lockable emergency isolator (grid + backup together, red marks before each floor\u2019s private meters).';
+      ? ' With only one TGSPDCL connection, the bus-tie breaker is closed after the unused meter is removed. A trapped key stops both meters being paralleled. Every floor has two red isolators, grid and backup, on one padlock hasp.'
+      : ' ' + M.ARCHS[arch].note + ' Pumps sit on Meter 2 by default (pump transfer switch, position II) so both meters stay clear of 800 units. Floor 1 transfer is position I by default. Floor 2 transfer is position II (Layout C). The car charger is on the solar main panel, after Meter 2 and before the inverter. Each floor has two red isolators on one padlock hasp.';
     $('#sldNote').textContent = notes[view] + archNote;
     $('#sldArchControl').style.display = oneMeter ? 'none' : '';
   }
@@ -574,6 +576,7 @@
       'everyone runs air conditioners.',
       '',
       'Dashed = spare circuit, wired now, used later.',
+      'Backup sockets are 3 A, not universal 6/16 A sockets.',
     ], { 'font-size': 11, class: 'muted' }, 16);
 
     const bkKw = backupList.filter((c) => !c.optional).reduce((s, c) => s + c.kw, 0);
@@ -611,13 +614,13 @@
     const note = [
       `Layout C is suitable if TGSPDCL sanctions Meter 2 on expected peak (about ${Math.round(res.C.p.kw2)} kW).`,
       `If TGSPDCL counts every appliance, Meter 2 in Layout C needs about ${Math.round(res.C.c.m2)} kW, over the limit.`,
-      `Then set the Floor 2 transfer switch to Meter 1 (Layout B): the meters need about ${Math.round(res.B.c.m1)} and ${Math.round(res.B.c.m2)} kW, both under 56 kW, and the two bills rise by about ${rs(diff)} a year.`,
+      `Then set the Floor 2 transfer switch to Meter 1, and the pump switch to Meter 1 as well. With pumps left on Meter 2, Layout B is about ${Math.round(res.B.c.m1)} and ${Math.round(res.B.c.m2)} kW and has almost no margin under 56 kW. Bills rise by about ${rs(diff)} a year.`,
       `Layout A fails when every appliance is counted (Meter 1 about ${Math.round(res.A.c.m1)} kW).`,
     ];
+    const invChk = M.inverterLoadCheck(base);
+    note.push(`Backup bus worst case is ${kw(invChk.backupKw)} against a ${kw(invChk.limit)} design ceiling (${kw(invChk.slack)} of slack under ${invChk.nameplate} kVA). The car charger is not on that bus.`);
     if (S.b.extras.ev) {
-      const invChk = M.inverterLoadCheck(base);
-      const invChk33 = M.inverterLoadCheck(Object.assign({}, base, { evKw: 3.3 }));
-      note.push(`The car charger no longer loads Meter 2 directly - it's wired post-inverter, so it shares the PuREPower's own 20 kW budget instead: worst case (every home at its backup limit, lift running) is ${kw(invChk.backupKw)} of backup plus a ${kw(invChk.evKw)} charger = ${kw(invChk.total)}${invChk.fits ? ', within the inverter' : ', over the inverter\u2019s 20 kW rating'}. A 3.3 kW charger instead needs ${kw(invChk33.total)}${invChk33.fits ? ', with headroom to spare' : ', still tight'}.`);
+      note.push(`The charger is on the solar main panel, after Meter 2 and before the inverter, so its units are offset by monthly net metering. A 7.4 kW charger at 240 units a month can push a summer month over 800 units. Keep May-July charging under about 170 units, or the fixed charge jumps. It does not load the inverter.`);
     }
     if (S.meterMode === 'one') {
       const combConn = M.connectedLoad(base);
@@ -719,8 +722,8 @@
       if (k === 'inv') { sub = s.gridOn ? (s.discharge > 0.02 ? 'battery helping' : 'grid pass-through') : 'island mode'; sub2 = s.gridOn ? 'on grid' : 'on battery + solar'; }
       if (k === 'bus') { sub = f1(s.backupLoad) + ' kW'; sub2 = 'homes, lift, lights'; }
       if (k === 'grid') { sub = !s.gridOn ? 'power cut' : gridShow < -0.02 ? (oneMeter ? 'exports' : 'Meter 2 exports') : (oneMeter ? 'imports' : 'Meter 2 imports'); sub2 = s.gridOn ? f1(Math.abs(gridShow)) + ' kW' : ''; }
-      if (k === 'h2') { sub = dead ? 'off in power cut' : f1(heavyShow) + ' kW'; sub2 = oneMeter ? 'Every floor\u2019s appliances' : 'Air conditioners, geysers'; }
-      if (k === 'm1') { sub = dead ? 'off in power cut' : f1(s.m1) + ' kW'; sub2 = 'Pumps, Floor 1, Penthouse'; }
+      if (k === 'h2') { sub = dead ? 'off in power cut' : f1(heavyShow) + ' kW'; sub2 = oneMeter ? 'Every floor, pumps, charger' : 'Floors 2-4, pumps, charger'; }
+      if (k === 'm1') { sub = dead ? 'off in power cut' : f1(s.m1) + ' kW'; sub2 = 'Floor 1, Penthouse'; }
       txt(g, n.x + 12, n.y + 41, sub, { 'font-size': 12, class: 't-mono' });
       if (sub2 && k !== 'bat') txt(g, n.x + 12, n.y + 57, sub2, { 'font-size': 11, class: 'muted' });
       if (k === 'bat') {
@@ -816,7 +819,7 @@
     else notes.push(`Meter 2 imported ${f1(t.m2Import)} and exported ${f1(t.export)} units. Net metering only counts the month, so the battery does not need to cycle.`);
     if (t.curtailed > 0.1) notes.push(`${f1(t.curtailed)} units of solar were wasted because export stops during a power cut.`);
     if (t.unserved > 0.01) notes.push(`${f1(t.unserved)} units of backup load could not be served: the battery ran out.`);
-    if (t.gridCharge > 0.1) notes.push(`After the cut the grid recharged ${f1(t.gridCharge)} units at a capped 3.2 kW.`);
+    if (t.gridCharge > 0.1) notes.push(`After the cut the grid recharged ${f1(t.gridCharge)} units at a capped 2.5 kW, so recharge plus the backup bus stays under 17.5 kW.`);
     $('#dayNote').textContent = notes.join(' ');
   }
 
@@ -897,7 +900,8 @@
     }
     const a = results.PB1;
     const b = results.PB2;
-    $('#phaseNote').textContent = `With this load, one phase per home peaks at ${a.max.toFixed(2)} kW on one phase (imbalance ${Math.round(a.imbalance * 100)} %), and three phases in every home peaks at ${b.max.toFixed(2)} kW (imbalance ${Math.round(b.imbalance * 100)} %). With three phases per home, an empty home takes the same load off all three phases, so the inverter stays balanced. The pump needs an interlock: it runs only when the lift is idle and the battery is above 50 %.`;
+    const audit = M.vacancyAudit(S.ph.pump);
+    $('#phaseNote').textContent = `Design ceiling is ${M.DESIGN_MAX_KW} kW total, ${ (M.DESIGN_MAX_KW / 3).toFixed(2) } kW per phase, not the 20 kVA nameplate. With this load, one phase per home peaks at ${a.max.toFixed(2)} kW (imbalance ${Math.round(a.imbalance * 100)} %). Three phases in every home peaks at ${b.max.toFixed(2)} kW (imbalance ${Math.round(b.imbalance * 100)} %). Checked all ${audit.masks} ways the five homes can be empty or occupied: the busiest phase is still the all-homes case, and every mask stays inside the ceiling${audit.allFit ? '' : ' except the pump-on-backup case, which needs the lift interlock'}. A 3 A breaker per phase, and a work socket that rotates with the floor, stops residents piling one phase.`;
   }
   function setupPhases() {
     seg($('#phLoad'), [{ v: 'limit', label: 'Every home at its limit' }, { v: 'typical', label: 'Typical 21:00 summer' }, { v: 'light', label: 'Light (0.3 kW)' }], S.ph.load, (v) => { S.ph.load = v; renderPhases(); });
@@ -1132,8 +1136,8 @@
 
   function renderFuture() {
     const rows = [
-      ['Car charger, daytime', 'Dedicated circuit on the backup main board (post-inverter): 32 A MCB + Type B earth-leakage device, 6 sq mm cable to parking', 'About 240 units a month; moving to 14 kW of solar covers it; worst case it competes with home backup for inverter headroom (see Home wiring, Load check)'],
-      ['More solar', 'Roof layout for 3 strings of 8 panels', '14 kW is the limit with one string per solar input; more needs a second inverter'],
+      ['Car charger, daytime', 'Solar main panel circuit 7, after Meter 2, before the inverter. 32 A breaker, Type B earth-leakage device, 6 sq mm to parking', 'Units are offset by monthly net metering. Not on the inverter. A 240-unit month in May-July can cross 800 units; keep those months under about 170 units.'],
+      ['More solar', 'Three trackers, strings of 8 already used for 14 kW', 'Inverter solar input is 20 kW. More than about 16 kW on this meter mostly becomes winter surplus. A later small inverter on Meter 1 is the next step if roof remains.'],
       ['Solar on Meter 1', 'Space and conduit for a second inverter (TGSPDCL offered a second net meter)', 'Only if roof space remains'],
       ['Floor-transfer switches', 'Floor 1 and Floor 2 switches fitted now as standard; a spare 4-pole circuit on the grid main panel for a third (Penthouse)', 'Moves a floor between meters when homes are empty or TGSPDCL\u2019s counting rule calls for it (needs TGSPDCL approval)'],
       ['Pump on backup', 'Contactor space in the Ground backup board', 'Interlock: lift idle and battery over 50 %'],
@@ -1328,10 +1332,11 @@
     open.appendChild(html('h3', { text: 'Still to confirm in writing' }));
     const oul = html('ul', { class: 'plain' });
     for (const t of [
-      'PuREnergy: confirmed 20 kVA total (PURE Energy spec), but the per-phase breaker split is still assumed (6.7 kW each, VERIFY); whether it switches the neutral in a power cut (neutral-earth link); TGSPDCL certificates; zero-export and grid-charging settings; signal contacts; what the \u20b95.5 lakh includes; battery chemistry and warranty.',
+      'PuREnergy, before the backup boards are energised: per-phase current limit; pass-through rating; whether 150 percent for 10 seconds exists; grid-charge setting locked at 2.5 kW; whether the neutral opens in a cut and where the neutral-earth link is; three solar trackers and maximum string voltage; export sensor on the Meter 2 incomer; signal contacts; what the quote includes; battery chemistry.',
       'TGSPDCL: whether the sanctioned load is counted per appliance or as expected peak (decides Layout C or B); the low-tension limit (assumed 56 kW); the one-time service-line charge per kW (the state regulator\u2019s Regulation 1 of 2026 lists about \u20b910,000 per kW for connections above 20 kW); the floor split and the Floor 1 and Floor 2 transfer switches, and whether moving one needs a fresh connection application each time; private metering conditions; rate paid for surplus units; subsidy on Meter 2; the \u20b950 per kW fixed charge in months above 800 units.',
       'Lift vendor: drive that does not feed power back, type of earth-leakage device, input for the park signal.',
-      'Owner: longest power cut in the area; usable roof area for 21 panels (about 72 sq m on a raised frame).',
+      'Owner: longest power cut in the area; usable unshaded roof for 24 panels (3 strings of 8). Do not add a shaded string.',
+      'Net metering is the rule (TGERC rooftop regulation, 15 Nov 2025): export and import net inside the month; only a month-end surplus is paid at the lowest discovered solar tariff. The rupee figure used here for that tariff is a planning number, not a guess about the rule.',
     ]) oul.appendChild(html('li', { text: t }));
     open.appendChild(oul);
     con.appendChild(open);
@@ -1386,8 +1391,8 @@
   function setupMeterMode() {
     const note = () => {
       $('#scenarioNote').textContent = S.meterMode === 'one'
-        ? 'Showing the one-meter contingency: bus-tie switch closed, everything running off a single TGSPDCL connection (section 2.10).'
-        : 'Showing the plan as designed: two separate TGSPDCL connections, bus-tie switch open.';
+        ? 'Showing the one-meter contingency: bus-tie breaker closed after the unused meter is removed. One TGSPDCL connection (section 2.10).'
+        : 'Showing the plan as designed: two TGSPDCL connections, bus-tie breaker open and key-locked.';
     };
     seg($('#meterModeSeg'), [
       { v: 'two', label: 'Two meters (plan)' },
