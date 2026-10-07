@@ -3,10 +3,10 @@
 G+4 + penthouse, Hyderabad. 6 Oct 2026. Built from your decisions in
 [solar_power_plan_decision_guide.md](solar_power_plan_decision_guide.md).
 
-- **Interactive version:** open [site/index.html](site/index.html) in any browser (works offline).
+- **Interactive version:** open [index.html](index.html) in any browser (works offline).
   It has the building layout, wiring diagram, a 24-hour energy-flow simulator, phase-balance and
   bill calculators, and printable sheets for the electrician and contractor.
-- **Numbers** come from one model, [site/js/model.js](site/js/model.js), so this file and the
+- **Numbers** come from one model, [js/model.js](js/model.js), so this file and the
   website always agree. They are estimates; anything marked **VERIFY** needs a written answer
   before you pay.
 
